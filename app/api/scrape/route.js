@@ -1,19 +1,16 @@
-import chromium from 'chrome-aws-lambda';
+import { chromium } from 'playwright';
 
 export async function GET() {
   try {
-    // Launch browser using chrome-aws-lambda
-    const browser = await chromium.puppeteer.launch({
-      args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath,
-      headless: chromium.headless,
-      ignoreHTTPSErrors: true,
+    // Launch browser using Playwright's chromium
+    const browser = await chromium.launch({
+      headless: true, // Run in headless mode
+      args: ["--hide-scrollbars", "--disable-web-security"],
     });
 
     const page = await browser.newPage();
 
-    await page.goto('https://medium.oldcai.com/', { waitUntil: 'networkidle2' });
+    await page.goto('https://medium.oldcai.com/', { waitUntil: 'networkidle' });
 
     // Wait for the table to load
     await page.waitForSelector('table.table.table-bordered.table-striped.table-hover');
