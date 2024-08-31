@@ -1,4 +1,4 @@
-// pages/api/checkout.js
+// pages/api/checkout.js 
 import Stripe from 'stripe';
 
 // Initialize Stripe with your secret key
