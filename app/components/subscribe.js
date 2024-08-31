@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import axios from 'axios';
 
-const stripePromise = loadStripe("pk_test_51PtsZlIN3vjsoaxX77iBEIzrTgxVF6WhMxUYKaEtmIxmgUba1p8creyhQJO2cmIvSwSzHYABsTyXbxrTxHwgQrIn00TrgH00DL");
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
 export default function CheckoutButton() {
   const [loading, setLoading] = useState(false);

@@ -1,13 +1,13 @@
 import puppeteer from 'puppeteer';
 
 const BROWSERLESS_API_URL = 'https://chrome.browserless.io'; // Replace with your Browserless API URL
-const BROWSERLESS_API_KEY = 'QlT5BCNI21Q3Hy4cd4c6b78753a8463397070c19f0'; // Replace with your Browserless API key
+const NEXT_PUBLIC_BROWSERLESS_API_KEY = 'QlT5BCNI21Q3Hy4cd4c6b78753a8463397070c19f0'; // Replace with your Browserless API key
 
 export async function GET() {
   try {
     // Connect to Browserless API
     const browser = await puppeteer.connect({
-      browserWSEndpoint: `${BROWSERLESS_API_URL}/?token=${BROWSERLESS_API_KEY}`,
+      browserWSEndpoint: `${BROWSERLESS_API_URL}/?token=${NEXT_PUBLIC_BROWSERLESS_API_KEY}`,
     });
 
     const page = await browser.newPage();
