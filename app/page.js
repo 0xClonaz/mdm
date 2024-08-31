@@ -38,7 +38,7 @@ export default function HomePage() {
     async function fetchTags() {
       try {
         const response = await axios.get('/api/scrape');
-        setTags(response.data.slice(0, 10));
+        setTags(response.data.slice(0, 100)); // Fetch top 100 tags
         setLoadingTags(false);
       } catch (error) {
         console.error('Error fetching tags:', error);
@@ -81,7 +81,9 @@ export default function HomePage() {
               <span className="user-status">
                 Account Status: {isPremium ? 'Premium' : 'Free'}
               </span>
-              <Link href="/subscribe" className="nav-link">Subscribe</Link>
+              {!isPremium && (
+                <Link href="/subscribe" className="nav-link">Subscribe</Link>
+              )}
               <Link href="/profile" className="nav-link">Profile</Link>
               <button onClick={() => signOut(auth)} className="button">Logout</button>
             </>
@@ -99,14 +101,18 @@ export default function HomePage() {
           Get ahead of the curve with our comprehensive tag insights. Whether you're crafting the perfect story or optimizing your content strategy, our premium features give you the edge.
         </p>
         {user ? (
+          isPremium ? (
+            <p>You are a premium user. Enjoy all features!</p>
+          ) : (
             <Link href="/subscribe" className="button">Subscribe</Link>
+          )
         ) : (
           <p>Please <Link href="/login" className="button">log in</Link> to access premium features.</p>
         )}
       </section>
       <section className="side-by-side">
         <div className="featured-tags">
-          <h2>Top 10 Tags</h2>
+          <h2>Top 100 Tags</h2>
           {loadingTags ? (
             <div className="loading">Loading...</div>
           ) : (
