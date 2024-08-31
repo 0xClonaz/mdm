@@ -1,20 +1,42 @@
-// components/subscribe.js
-import { loadStripe } from '@stripe/stripe-js';
+import Stripe from 'stripe';
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY, {
+  apiVersion: '2022-08-01',
+});
 
-export default function CheckoutButton() {
-  const handleClick = async () => {
-    const stripe = await stripePromise;
+export default async function handler(req, res) {
+  if (req.method === 'POST') {
+    const { userId } = req.body;
 
-    const response = await fetch('/api/checkout', { method: 'POST' });
-    const { sessionId } = await response.json();
+    try {
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price_data: {
+              currency: 'usd',
+              product_data: {
+                name: 'Premium Subscription',
+              },
+              unit_amount: 999, // $9.99
+            },
+            quantity: 1,
+          },
+        ],
+        mode: 'payment',
+        success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/success`,
+        cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/cancel`,
+        metadata: {
+          userId: userId,
+        },
+      });
 
-    const { error } = await stripe.redirectToCheckout({ sessionId });
-    if (error) {
-      console.error('Error redirecting to checkout:', error);
+      res.status(200).json({ sessionId: session.id });
+    } catch (error) {
+      res.status(500).json({ error: 'Internal Server Error' });
     }
-  };
-
-  return <button onClick={handleClick}>Subscribe</button>;
+  } else {
+    res.setHeader('Allow', ['POST']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
 }
