@@ -1,6 +1,68 @@
 import Image from "next/image";
 
-export default function Home() {
+export default function HomePage() {
+  const [tags, setTags] = useState([]);
+  const [story, setStory] = useState('');
+  const [suggestedTags, setSuggestedTags] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [loadingTags, setLoadingTags] = useState(true);
+  const [loadingSuggestedTags, setLoadingSuggestedTags] = useState(false);
+  const [user, setUser] = useState(null);
+  const [isPremium, setIsPremium] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
+      setUser(currentUser);
+
+      if (currentUser) {
+        const db = getDatabase();
+        const userRef = ref(db, 'users/' + currentUser.uid);
+
+        onValue(userRef, (snapshot) => {
+          const data = snapshot.val();
+          setIsPremium(data ? data.isPremium : false);
+        });
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    async function fetchTags() {
+      try {
+        const response = await axios.get('/api/scrape');
+        setTags(response.data.slice(0, 10));
+        setLoadingTags(false);
+      } catch (error) {
+        console.error('Error fetching tags:', error);
+        setLoadingTags(false);
+      }
+    }
+
+    fetchTags();
+  }, []);
+
+  const handleStorySubmit = async (event) => {
+    event.preventDefault();
+    if (story.trim() === '') return;
+
+    if (!isPremium) {
+      alert('Please upgrade to premium to use this feature.');
+      return;
+    }
+
+    setLoadingSuggestedTags(true);
+
+    try {
+      const response = await axios.post('/api/find-tags', { story });
+      setSuggestedTags(response.data);
+      setLoadingSuggestedTags(false);
+    } catch (error) {
+      console.error('Error finding tags:', error);
+      setLoadingSuggestedTags(false);
+    }
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
