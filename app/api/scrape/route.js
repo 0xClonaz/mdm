@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import puppeteer from 'puppeteer';
 
 const BROWSERLESS_API_URL = 'https://chrome.browserless.io'; // Replace with your Browserless API URL
@@ -8,11 +9,25 @@ export async function GET() {
     // Connect to Browserless API
     const browser = await puppeteer.connect({
       browserWSEndpoint: `${BROWSERLESS_API_URL}/?token=${NEXT_PUBLIC_BROWSERLESS_API_KEY}`,
+=======
+import { chromium } from 'playwright';
+
+export async function GET() {
+  try {
+    // Launch browser using Playwright's chromium
+    const browser = await chromium.launch({
+      headless: true, // Run in headless mode
+      args: ["--hide-scrollbars", "--disable-web-security"],
+>>>>>>> dd014170031abab1302d77145d71257c38704bd4
     });
 
     const page = await browser.newPage();
 
+<<<<<<< HEAD
     await page.goto('https://medium.oldcai.com/', { waitUntil: 'networkidle2' });
+=======
+    await page.goto('https://medium.oldcai.com/', { waitUntil: 'networkidle' });
+>>>>>>> dd014170031abab1302d77145d71257c38704bd4
 
     // Wait for the table to load
     await page.waitForSelector('table.table.table-bordered.table-striped.table-hover');
@@ -35,7 +50,11 @@ export async function GET() {
       }).filter(row => row !== null);
     });
 
+<<<<<<< HEAD
     await browser.disconnect(); // Close the connection
+=======
+    await browser.close();
+>>>>>>> dd014170031abab1302d77145d71257c38704bd4
 
     return new Response(JSON.stringify(tags), { status: 200 });
   } catch (error) {

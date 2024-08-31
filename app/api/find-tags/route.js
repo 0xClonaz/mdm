@@ -1,9 +1,12 @@
 import puppeteer from 'puppeteer';
 import { NextResponse } from 'next/server';
 
+<<<<<<< HEAD
 const BROWSERLESS_API_URL = 'https://chrome.browserless.io'; // Replace with your Browserless API URL
 const BROWSERLESS_API_KEY = process.env.NEXT_PUBLIC_BROWSERLESS_API_KEY; // Replace with your Browserless API key
 
+=======
+>>>>>>> dd014170031abab1302d77145d71257c38704bd4
 export async function POST(request) {
   const { story } = await request.json();
 
@@ -12,6 +15,7 @@ export async function POST(request) {
   }
 
   try {
+<<<<<<< HEAD
     // Connect to Browserless API
     const browser = await puppeteer.connect({
       browserWSEndpoint: `${BROWSERLESS_API_URL}/?token=${BROWSERLESS_API_KEY}`,
@@ -19,6 +23,15 @@ export async function POST(request) {
 
     const page = await browser.newPage();
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');
+=======
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
+    });
+    const page = await browser.newPage();
+    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');
+
+>>>>>>> dd014170031abab1302d77145d71257c38704bd4
     await page.setViewport({ width: 1280, height: 800 });
 
     // Debug: Log network and console errors
@@ -65,8 +78,12 @@ export async function POST(request) {
       });
     });
 
+<<<<<<< HEAD
     await browser.disconnect(); // Close the connection
 
+=======
+    await browser.close();
+>>>>>>> dd014170031abab1302d77145d71257c38704bd4
     console.log(tags);
     return NextResponse.json(tags, { status: 200 });
   } catch (error) {
