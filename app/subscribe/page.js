@@ -8,9 +8,25 @@ export default function SubscribePage() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(setUser);
-    return () => unsubscribe();
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      console.log('User state changed:', user); // Debugging line
+      setUser(user);
+    });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
+
+  if (user === null) {
+    // Render a loading state while checking authentication
+    return (
+      <div className="container">
+        <h1>Subscribe</h1>
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   if (!user) {
     return (
