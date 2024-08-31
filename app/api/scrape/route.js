@@ -1,13 +1,17 @@
-import puppeteer from 'puppeteer';
+import chromium from 'chrome-aws-lambda';
 
 export async function GET() {
   try {
-    const browser = await puppeteer.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    // Launch browser using chrome-aws-lambda
+    const browser = await chromium.puppeteer.launch({
+      args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath,
+      headless: chromium.headless,
+      ignoreHTTPSErrors: true,
     });
-    const page = await browser.newPage();
 
+    const page = await browser.newPage();
 
     await page.goto('https://medium.oldcai.com/', { waitUntil: 'networkidle2' });
 
