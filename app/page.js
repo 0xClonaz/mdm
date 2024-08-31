@@ -1,3 +1,4 @@
+// app/page.js
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -141,7 +142,7 @@ export default function HomePage() {
           )}
         </div>
         <div className="find-tags">
-          <h2>Find Tags for Your Story</h2>
+          <h2>Find Tags for Your Story with our AI</h2>
           <form onSubmit={handleStorySubmit}>
             <textarea
               value={story}
