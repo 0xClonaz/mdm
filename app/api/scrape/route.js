@@ -1,13 +1,16 @@
 import puppeteer from 'puppeteer';
 
+const BROWSERLESS_API_URL = 'https://chrome.browserless.io'; // Replace with your Browserless API URL
+const BROWSERLESS_API_KEY = 'QlT5BCNI21Q3Hy4cd4c6b78753a8463397070c19f0'; // Replace with your Browserless API key
+
 export async function GET() {
   try {
-    const browser = await puppeteer.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    // Connect to Browserless API
+    const browser = await puppeteer.connect({
+      browserWSEndpoint: `${BROWSERLESS_API_URL}/?token=${BROWSERLESS_API_KEY}`,
     });
-    const page = await browser.newPage();
 
+    const page = await browser.newPage();
 
     await page.goto('https://medium.oldcai.com/', { waitUntil: 'networkidle2' });
 
@@ -32,7 +35,7 @@ export async function GET() {
       }).filter(row => row !== null);
     });
 
-    await browser.close();
+    await browser.disconnect(); // Close the connection
 
     return new Response(JSON.stringify(tags), { status: 200 });
   } catch (error) {
