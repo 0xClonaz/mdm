@@ -1,4 +1,3 @@
-// pages/subscribe.js
 import { loadStripe } from '@stripe/stripe-js';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
@@ -7,12 +6,8 @@ export default function Subscribe() {
   const handleSubscribe = async () => {
     const stripe = await stripePromise;
 
-    const response = await fetch('/api/subscribe', {
+    const response = await fetch('/api/checkout', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ userId: 'your-user-id' }), // Ensure this is the correct userId
     });
 
     const { sessionId } = await response.json();
