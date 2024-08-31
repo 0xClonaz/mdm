@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@next/bundle-analyzer": "^14.2.7",
     "@stripe/stripe-js": "^4.4.0",
     "axios": "^1.7.6",
     "cheerio": "^1.0.0",
